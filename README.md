@@ -1,16 +1,14 @@
-MySQL Cookbook
+MariaDB Cookbook
 =====================
 
-The Mysql Cookbook is a library cookbook that provides resource primitives
+The MariaDB Cookbook is a library cookbook that provides resource primitives
 (LWRPs) for use in recipes. It is designed to be a reference example for
 creating highly reusable cross-platform cookbooks.
 
 Scope
 -----
-This cookbook is concerned with the "MySQL Community Server",
-particularly those shipped with F/OSS Unix and Linux distributions. It
-does not address forks or value-added repackaged MySQL distributions
-like Drizzle, MariaDB, or Percona.
+This cookbook is concerned with the "MariaDB Enterprise Server",
+particularly those shipped with F/OSS Unix and Linux distributions.
 
 Requirements
 ------------
@@ -24,45 +22,47 @@ Platform Support
 The following platforms have been tested with Test Kitchen:
 
 ```
-|----------------+-----+-----+-----+-----+-----|
-|                | 5.0 | 5.1 | 5.5 | 5.6 | 5.7 |
-|----------------+-----+-----+-----+-----+-----|
-| debian-7       |     |     | X   |     |     |
-|----------------+-----+-----+-----+-----+-----|
-| ubuntu-10.04   |     | X   |     |     |     |
-|----------------+-----+-----+-----+-----+-----|
-| ubuntu-12.04   |     |     | X   |     |     |
-|----------------+-----+-----+-----+-----+-----|
-| ubuntu-14.04   |     |     | X   | X   |     |
-|----------------+-----+-----+-----+-----+-----|
-| centos-5       |   X | X   | X   | X   | X   |
-|----------------+-----+-----+-----+-----+-----|
-| centos-6       |     | X   | X   | X   | X   |
-|----------------+-----+-----+-----+-----+-----|
-| centos-7       |     |     | X   | X   | X   |
-|----------------+-----+-----+-----+-----+-----|
-| amazon         |     |     | X   | X   | X   |
-|----------------+-----+-----+-----+-----+-----|
-| fedora-20      |     |     | X   | X   | X   |
-|----------------+-----+-----+-----+-----+-----|
-| suse-11.3      |     |     | X   |     |     |
-|----------------+-----+-----+-----+-----+-----|
-| omnios-151006  |     |     | X   | X   |     |
-|----------------+-----+-----+-----+-----+-----|
-| smartos-14.3.0 |     |     | X   | X   |     |
-|----------------+-----+-----+-----+-----+-----|
+|----------------+-----+------|
+|                | 5.5 | 10.0 |
+|----------------+-----+------|
+| debian-6       |     | X    |
+|----------------+-----+------|
+| debian-7       |     | X    |
+|----------------+-----+------|
+| ubuntu-10.04   |     | X    |
+|----------------+-----+------|
+| ubuntu-12.04   |     | X    |
+|----------------+-----+------|
+| ubuntu-14.04   |     | X    |
+|----------------+-----+------|
+| centos-5       |   X | X    |
+|----------------+-----+------|
+| centos-6       |     | X    |
+|----------------+-----+------|
+| centos-7       |     | X    |
+|----------------+-----+------|
+| suse-13        |     |      |
+|----------------+-----+------|
+| sles-11        |     |      |
+|----------------+-----+------|
+| sles-12        |     |      |
+|----------------+-----+------|
+| rhel-5         |     |      |
+|----------------+-----+------|
+| rhel-6         |     |      |
+|----------------+-----+------|
+| rhel-7         |     |      |
+|----------------+-----+------|
 ```
 
 Cookbook Dependencies
 ------------
-- yum-mysql-community
-- smf
 
 Usage
 -----
-Place a dependency on the mysql cookbook in your cookbook's metadata.rb
+Place a dependency on the MariaDB cookbook in your cookbook's metadata.rb
 ```ruby
-depends 'mysql', '~> 6.0'
+depends 'mariadb', '~> 0'
 ```
 
 Then, in a recipe:
@@ -204,13 +204,6 @@ omitted, it will default to the platform's native location.
   and files on disk are named `mysql-<instance_name>`. Defaults to the
   resource name.
 
-- `package_action` - Defaults to `:install`.
-
-- `package_name` - Defaults to a value looked up in an internal map.
-
-- `package_version` - Specific version of the package to install,
-  passed onto the underlying package manager. Defaults to `nil`.
-
 - `bind_address` - determines the listen IP address for the mysqld service. When
   omitted, it will be determined by MySQL. If the address is "regular" IPv4/IPv6
   address (e.g 127.0.0.1 or ::1), the server accepts TCP/IP connections only for
@@ -230,11 +223,6 @@ omitted, it will default to the platform's native location.
   `mysql_service` instance. Useful when configuring clients on the
   same machine to talk over socket and skip the networking stack.
   Defaults to a calculated value based on platform and instance name.
-
-- `version` - allows the user to select from the versions available
-  for the platform, where applicable. When omitted, it will install
-  the default MySQL version for the target platform. Available version
-  numbers are `5.0`, `5.1`, `5.5`, `5.6`, and `5.7`, depending on platform.
 
 #### Actions
 
@@ -264,10 +252,6 @@ should never be used directly. The `:start`, `:stop`, `:restart`, and
 `:reload` actions are stubs meant to be overridden by the providers
 below.
 
-- `Chef::Provider::MysqlService::Smf` - Starts a `mysql_service` using
-the Service Management Facility, used by Solaris and IllumOS. Manages
-the FMRI and method script.
-
 - `Chef::Provider::MysqlService::Systemd` - Starts a `mysql_service`
 using SystemD. Manages the unit file and activation state
 
@@ -276,113 +260,6 @@ using SysVinit. Manages the init script and status.
 
 - `Chef::Provider::MysqlService::Upstart` - Starts a `mysql_service`
 using Upstart. Manages job definitions and status.
-
-### mysql_config
-
-The `mysql_config` resource is a wrapper around the core Chef
-`template` resource. Instead of a `path` parameter, it uses the
-`instance` parameter to calculate the path on the filesystem where
-file is rendered.
-
-#### Example
-
-```ruby
-mysql_config[default] do
-  source 'site.cnf.erb'
-  action :create
-end
-```
-
-#### Parameters
-
-- `config_name` - The base name of the configuration file to be
-  rendered into the conf.d directory on disk. Defaults to the resource
-  name.
-
-- `cookbook` - The name of the cookbook to look for the template
-  source. Defaults to nil
-
-- `group` - System group for file ownership. Defaults to 'mysql'.
-
-- `instance` - Name of the `mysql_service` instance the config is
-  meant for. Defaults to 'default'.
-
-- `owner` - System user for file ownership. Defaults to 'mysql'.
-
-- `source` - Template in cookbook to be rendered.
-
-- `variables` - Variables to be passed to the underlying `template`
-  resource.
-
-- `version` - Version of the `mysql_service` instance the config is
-  meant for. Used to calculate path. Only necessary when using
-  packages with unique configuration paths, such as RHEL Software
-  Collections or OmniOS. Defaults to 'nil'
-
-#### Actions
-- `:create` - Renders the template to disk at a path calculated using
-  the instance parameter.
-  
-- `:delete` - Deletes the file from the conf.d directory calculated
-  using the instance parameter.
-
-#### More Examples
-```ruby
-mysql_service 'instance-1' do
-  action [:create, :start]
-end
-
-mysql_service 'instance-2' do
-  action [:create, :start]
-end
-
-mysql_config 'logging' do
-  instance 'instance-1'
-  source 'logging.cnf.erb'
-  action :create
-  notifies :restart, 'mysql_service[instance-1]'
-end
-
-mysql_config 'security settings for instance-2' do
-  config_name 'security'
-  instance 'instance-2'
-  source 'security_stuff.cnf.erb'
-  variables(:foo => 'bar')
-  action :create
-  notifies :restart, 'mysql_service[instance-2]'
-end
-```
-
-### mysql_client
-The `mysql_client` resource manages the MySQL client binaries and
-development libraries. 
-
-It is an example of a "singleton" resource. Declaring two
-`mysql_client` resources on a machine usually won't yield two separate
-copies of the client binaries, except for platforms that support
-multiple versions (RHEL SCL, OmniOS).
-
-#### Example
-```ruby
-mysql_client 'default' do
-  action :create
-end
-```
-
-#### Parameters
-- `package_name` - An array of packages to be installed. Defaults to a
-  value looked up in an internal map.  
-
-- `package_version` - Specific versions of the package to install,
-  passed onto the underlying package manager. Defaults to `nil`.
-
-- `version` - Major MySQL version number of client packages. Only
-  valid on for platforms that support multiple versions, such as RHEL
-  via Software Collections and OmniOS.
-  
-#### Actions
-- `:create` - Installs the client software
-- `:delete` - Removes the client software
 
 Advanced Usage Examples
 -----------------------
@@ -452,83 +329,8 @@ mysql_config 'site config for instance-2' do
   notifies :restart, 'mysql_service[instance-2]'
 end
 ```
-
-### Replication Testing
-Use multiple `mysql_service` instances to test a replication setup.
-This particular example serves as a smoke test in Test Kitchen because
-it exercises different resources and requires service restarts.
-
-https://github.com/chef-cookbooks/mysql/blob/master/test/fixtures/cookbooks/mysql_replication_test/recipes/default.rb
-
-Frequently Asked Questions
---------------------------
-
-### How do I run this behind my firewall?
-
-On Linux, the `mysql_service` resource uses the platform's underlying
-package manager to install software. For this to work behind
-firewalls, you'll need to either:
-
-- Configure the system yum/apt utilities to use a proxy server that
-  can reach the Internet
-- Host a package repository on a network that the machine can talk to
-
-On the RHEL platform_family, applying the `yum::default` recipe will
-allow you to drive the `yum_globalconfig` resource with attributes to
-change the global yum proxy settings.
-
-If hosting repository mirrors, applying one of the following recipes
-and adjust the settings with node attributes.
-
-- `recipe[yum-centos::default]` from the Supermarket
-  https://supermarket.chef.io/cookbooks/yum-centos
-  https://github.com/chef-cookbooks/yum-centos
-  
-- `recipe[yum-mysql-community::default]` from the Supermarket
-  https://supermarket.chef.io/cookbooks/yum-mysql-community
-  https://github.com/chef-cookbooks/yum-mysql-community
-  
-### The mysql command line doesn't work
-
-If you log into the machine and type `mysql`, you may see an error
-like this one:
-
-`Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'`
-
-This is because MySQL is hardcoded to read the defined default my.cnf
-file, typically at /etc/my.cnf, and this LWRP deletes it to prevent
-overlap among multiple MySQL configurations. 
-
-To connect to the socket from the command line, check the socket in the relevant my.cnf file and use something like this:
-
-`mysql -S /var/run/mysql-default/mysqld.sock -Pwhatever`
-
-Or to connect over the network, use something like this:
-connect over the network..
-
-`mysql -h 127.0.0.1 -Pwhatever`
-
-These network or socket ssettings can also be put in you
-$HOME/.my.cnf, if preferred.
-
-### What about MariaDB, Percona, Drizzle, WebScaleSQL, etc.
-
-MySQL forks are purposefully out of scope for this cookbook. This is
-mostly to reduce the testing matrix to a manageable size. Cookbooks
-for these technologies can easily be created by copying and adapting
-this cookbook. However, there will be differences.
-
-Package repository locations, package version names, software major
-version numbers, supported platform matrices, and the availability of
-software such as XtraDB and Galera are the main reasons that creating
-multiple cookbooks to make sense.
-
 Warnings
 --------
-
-Hacking / Testing / TODO
--------------------------
-Please refer to the HACKING.md
 
 License & Authors
 -----------------

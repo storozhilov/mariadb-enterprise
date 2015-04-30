@@ -10,7 +10,7 @@ class Chef
             group 'root'
             mode '0755'
             variables(socket_file: socket_file)
-            cookbook 'mysql'
+            cookbook 'mariadb'
             action :create
           end
 
@@ -27,7 +27,7 @@ class Chef
               run_user: new_resource.run_user,
               socket_dir: socket_dir
               )
-            cookbook 'mysql'
+            cookbook 'mariadb'
             action :create
           end
 

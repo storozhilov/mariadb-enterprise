@@ -1,4 +1,4 @@
-name 'mysql'
+name 'mariadb'
 maintainer 'Chef Software, Inc.'
 maintainer_email 'cookbooks@chef.io'
 license 'Apache 2.0'
@@ -17,5 +17,3 @@ supports 'smartos'
 supports 'omnios'
 supports 'suse'
 
-#depends 'yum-mysql-community'
-#depends 'smf'

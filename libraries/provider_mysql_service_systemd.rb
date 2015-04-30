@@ -12,7 +12,7 @@ class Chef
             group 'root'
             mode '0755'
             variables(socket_file: socket_file)
-            cookbook 'mysql'
+            cookbook 'mariadb'
             action :create
           end
 
@@ -29,7 +29,7 @@ class Chef
               base_dir: base_dir,
               mysqld_bin: mysqld_bin
               )
-            cookbook 'mysql'
+            cookbook 'mariadb'
             notifies :run, "execute[#{new_resource.name} :start systemctl daemon-reload]", :immediately
             action :create
           end
@@ -52,7 +52,7 @@ class Chef
               run_user: new_resource.run_user,
               run_group: new_resource.run_group
               )
-            cookbook 'mysql'
+            cookbook 'mariadb'
             action :create
           end
 

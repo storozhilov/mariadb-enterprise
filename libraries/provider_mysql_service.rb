@@ -26,20 +26,20 @@ class Chef
 
       action :create do
         # Yum, Apt, etc. From helpers.rb
-        configure_package_repositories
+#        configure_package_repositories
 
         # Software installation
-        package "#{new_resource.name} :create #{server_package_name}" do
-          package_name server_package_name
-          version parsed_version if node['platform'] == 'smartos'
-          version new_resource.package_version
-          action new_resource.package_action
-        end
+#        package "#{new_resource.name} :create #{server_package_name}" do
+#          package_name server_package_name
+#          version parsed_version if node['platform'] == 'smartos'
+#          version new_resource.package_version
+#          action new_resource.package_action
+#        end
 
-        create_stop_system_service
+        #create_stop_system_service
 
         # Apparmor
-        configure_apparmor
+        #configure_apparmor
 
         # System users
         group "#{new_resource.name} :create mysql" do

@@ -17,5 +17,5 @@ supports 'smartos'
 supports 'omnios'
 supports 'suse'
 
-depends 'yum-mysql-community'
-depends 'smf'
+#depends 'yum-mysql-community'
+#depends 'smf'

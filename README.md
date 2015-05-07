@@ -2,20 +2,17 @@ MariaDB Cookbook
 =====================
 
 The MariaDB Cookbook is a library cookbook that provides resource primitives
-(LWRPs) for use in recipes. It is designed to be a reference example for
-creating highly reusable cross-platform cookbooks.
+(LWRPs) for use in recipes and a few ready to use recipes: installation/deinstallation and start particular version of MariaDB.
 
 Scope
 -----
-This cookbook is concerned with the "MariaDB Enterprise Server",
-particularly those shipped with F/OSS Unix and Linux distributions.
+This cookbook is concerned with the "MariaDB Enterprise Server".
 
 Requirements
 ------------
 - Chef 11 or higher
 - Ruby 1.9 or higher (preferably from the Chef full-stack installer)
 - Network accessible package repositories
-- 'recipe[selinux::disabled]' on RHEL platforms
 
 Platform Support
 ----------------
@@ -25,33 +22,37 @@ The following platforms have been tested with Test Kitchen:
 |----------------+-----+------|
 |                | 5.5 | 10.0 |
 |----------------+-----+------|
-| debian-6       |     | X    |
+| debian-6       |  X  | X    |
 |----------------+-----+------|
-| debian-7       |     | X    |
+| debian-7       |  X  | X    |
 |----------------+-----+------|
-| ubuntu-10.04   |     | X    |
+| ubuntu-10.04   |  X  | X    |
 |----------------+-----+------|
-| ubuntu-12.04   |     | X    |
+| ubuntu-12.04   |  X  | X    |
 |----------------+-----+------|
-| ubuntu-14.04   |     | X    |
+| ubuntu-14.04   |  X  | X    |
 |----------------+-----+------|
-| centos-5       |   X | X    |
+| ubuntu-14.10   |  X  | X    |
 |----------------+-----+------|
-| centos-6       |     | X    |
+| centos-5       |  X  | X    |
 |----------------+-----+------|
-| centos-7       |     | X    |
+| centos-6       |  X  | X    |
 |----------------+-----+------|
-| suse-13        |     |      |
+| centos-7       |  X  | X    |
 |----------------+-----+------|
-| sles-11        |     |      |
+| suse-13        | recipes only |
 |----------------+-----+------|
-| sles-12        |     |      |
+| sles-11        |  X  | X    |
 |----------------+-----+------|
-| rhel-5         |     |      |
+| sles-12        |  X  | X    |
 |----------------+-----+------|
-| rhel-6         |     |      |
+| rhel-5         |  X  | X    |
 |----------------+-----+------|
-| rhel-7         |     |      |
+| rhel-6         |  X  | X    |
+|----------------+-----+------|
+| rhel-7         |  X  | X    |
+|----------------+-----+------|
+| Windows        | recipes only |
 |----------------+-----+------|
 ```
 
@@ -60,14 +61,32 @@ Cookbook Dependencies
 
 Usage
 -----
-Place a dependency on the MariaDB cookbook in your cookbook's metadata.rb
+
+In a vagrant file:
+
+```ruby
+    config.vm.provision :chef_solo do |chef|
+      chef.cookbooks_path = "<bla-bla>/cookbooks"
+      chef.provisioning_path = "/tmp/vagrant-chef/chef-solo"
+      chef.json = {
+        :maria => {
+          version: 10.0.17 
+        }
+      }
+      chef.add_recipe "mariadb::install"
+    end
+```
+
+Or you can use MariaDB cookbook into your own cookbook. Place a dependency on the MariaDB cookbook in your cookbook's metadata.rb
+
 ```ruby
 depends 'mariadb', '~> 0'
 ```
 
-Then, in a recipe:
+Then, in recipe:
 
 ```ruby
+
 mysql_service 'foo' do
   port '3306'
   version '5.5'

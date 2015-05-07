@@ -62,7 +62,11 @@ Cookbook Dependencies
 Usage
 -----
 
-In a vagrant file:
+For MariaDB Enterprise default version installation type in command line:
+
+`$ chef-solo -c solo.rb -o recipe[mariadb::install]`
+
+In a vagrant file (For 10.0.17 MDBE version):
 
 ```ruby
     config.vm.provision :chef_solo do |chef|
@@ -149,6 +153,45 @@ cookbook's templates folder.
 
 Resources Overview
 ------------------
+### Recipes
+
+## install
+
+Installs particular version (10.0 by default) MariaDB Enterprise server.
+
+Usage:
+
+`$ chef-solo -c solo.rb -o recipe[mariadb::install]`
+
+## uninstall
+
+Removes both MariaDB Enterprise server & client.
+
+Usage:
+
+`$ chef-solo -c solo.rb -o recipe[mariadb::uninstall]`
+
+## purge
+
+Removes both MariaDB Enterprise server & client and REMOVE ALL DATA and configurations, turns off repositories.
+
+## start
+
+Creates (doesn't install MariaDB!) and starts MariaDB Enterprise server daemon with particular params. For example:
+
+```ruby
+    config.vm.provision :chef_solo do |chef|
+      chef.cookbooks_path = "<bla-bla>/cookbooks"
+      chef.provisioning_path = "/tmp/vagrant-chef/chef-solo"
+      chef.json = {
+        :maria => {
+          bind_address: 127.0.0.1
+        }
+      }
+      chef.add_recipe "mariadb::start"
+    end
+```
+
 ### mysql_service
 
 The `mysql_service` resource manages the basic plumbing needed to get a

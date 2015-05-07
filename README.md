@@ -16,7 +16,7 @@ Requirements
 
 Platform Support
 ----------------
-The following platforms have been tested with Test Kitchen:
+The following platforms have been tested:
 
 ```
 |----------------+-----+------|

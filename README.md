@@ -40,7 +40,7 @@ The following platforms have been tested with Test Kitchen:
 |----------------+-----+------|
 | centos-7       |  X  | X    |
 |----------------+-----+------|
-| suse-13        | recipes only |
+| suse-13        | recipes only | |
 |----------------+-----+------|
 | sles-11        |  X  | X    |
 |----------------+-----+------|
@@ -52,7 +52,7 @@ The following platforms have been tested with Test Kitchen:
 |----------------+-----+------|
 | rhel-7         |  X  | X    |
 |----------------+-----+------|
-| Windows        | recipes only |
+| Windows        | recipes only | |
 |----------------+-----+------|
 ```
 
@@ -146,27 +146,6 @@ end
 
 You are responsible for providing `my_extra_settings.erb` in your own
 cookbook's templates folder.
-
-Connecting with the mysql CLI command
--------------------------------------
-Logging into the machine and typing `mysql` with no extra arguments
-will fail. You need to explicitly connect over the socket with `mysql
--S /var/run/mysql-foo/mysqld.sock`, or over the network with `mysql -h
-127.0.0.1`
-
-Upgrading from older version of the mysql cookbook
---------------------------------------------------
-- It is strongly recommended that you rebuild the machine from
-  scratch. This is easy if you have your `data_dir` on a dedicated
-  mount point. If you *must* upgrade in-place, follow the instructions
-  below.
-
-- The 6.x series supports multiple service instances on a single
-  machine. It dynamically names the support directories and service
-  names. `/etc/mysql becomes /etc/mysql-instance_name`. Other support
-  directories in `/var` `/run` etc work the same way. Make sure to
-  specify the `data_dir` property on the `mysql_service` resource to
-  point to the old `/var/lib/mysql` directory.
 
 Resources Overview
 ------------------
@@ -280,87 +259,9 @@ using SysVinit. Manages the init script and status.
 - `Chef::Provider::MysqlService::Upstart` - Starts a `mysql_service`
 using Upstart. Manages job definitions and status.
 
-Advanced Usage Examples
------------------------
-There are a number of configuration scenarios supported by the use of
-resource primitives in recipes. For example, you might want to run
-multiple MySQL services, as different users, and mount block devices
-that contain pre-existing databases.
-
-### Multiple Instances as Different Users
-
-```ruby
-# instance-1
-user 'alice' do
-  action :create
-end
-
-directory '/mnt/data/mysql/instance-1' do
-  owner 'alice'
-  action :create
-end
-
-mount '/mnt/data/mysql/instance-1' do
-  device '/dev/sdb1'
-  fstype 'ext4'
-  action [:mount, :enable]
-end
-
-mysql_service 'instance-1' do
-  port '3307'
-  run_user 'alice'
-  data_dir '/mnt/data/mysql/instance-1'
-  action [:create, :start]
-end
-
-mysql_config 'site config for instance-1' do
-  instance 'instance-1'
-  source 'instance-1.cnf.erb'
-  notifies :restart, 'mysql_service[instance-1]'
-end
-
-# instance-2
-user 'bob' do
-  action :create
-end
-
-directory '/mnt/data/mysql/instance-2' do
-  owner 'bob'
-  action :create
-end
-
-mount '/mnt/data/mysql/instance-2' do
-  device '/dev/sdc1'
-  fstype 'ext3'
-  action [:mount, :enable]
-end
-
-mysql_service 'instance-2' do
-  port '3308'
-  run_user 'bob'
-  data_dir '/mnt/data/mysql/instance-2'
-  action [:create, :start]
-end
-
-mysql_config 'site config for instance-2' do
-  instance 'instance-2'
-  source 'instance-2.cnf.erb'
-  notifies :restart, 'mysql_service[instance-2]'
-end
-```
-Warnings
---------
-
-License & Authors
+License
 -----------------
-- Author:: Joshua Timberman (<joshua@chef.io>)
-- Author:: AJ Christensen (<aj@chef.io>)
-- Author:: Seth Chisamore (<schisamo@chef.io>)
-- Author:: Brian Bianco (<brian.bianco@gmail.com>)
-- Author:: Jesse Howarth (<him@jessehowarth.com>)
-- Author:: Andrew Crump (<andrew@kotirisoftware.com>)
-- Author:: Christoph Hartmann (<chris@lollyrock.com>)
-- Author:: Sean OMeara (<sean@chef.io>)
+Forked from https://github.com/chef-cookbooks/mysql
 
 ```text
 Copyright:: 2009-2014 Chef Software, Inc

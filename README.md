@@ -40,7 +40,7 @@ The following platforms have been tested with Test Kitchen:
 |----------------+-----+------|
 | centos-7       |  X  | X    |
 |----------------+-----+------|
-| suse-13        | recipes only | |
+| suse-13        | recipes only |
 |----------------+-----+------|
 | sles-11        |  X  | X    |
 |----------------+-----+------|
@@ -52,7 +52,7 @@ The following platforms have been tested with Test Kitchen:
 |----------------+-----+------|
 | rhel-7         |  X  | X    |
 |----------------+-----+------|
-| Windows        | recipes only | |
+| Windows        | recipes only |
 |----------------+-----+------|
 ```
 

@@ -2,56 +2,57 @@ MariaDB Cookbook
 =====================
 
 The MariaDB Cookbook is a library cookbook that provides resource primitives
-(LWRPs) for use in recipes. It is designed to be a reference example for
-creating highly reusable cross-platform cookbooks.
+(LWRPs) for use in recipes and a few ready to use recipes: installation/deinstallation and start particular version of MariaDB.
 
 Scope
 -----
-This cookbook is concerned with the "MariaDB Enterprise Server",
-particularly those shipped with F/OSS Unix and Linux distributions.
+This cookbook is concerned with the "MariaDB Enterprise Server".
 
 Requirements
 ------------
 - Chef 11 or higher
 - Ruby 1.9 or higher (preferably from the Chef full-stack installer)
 - Network accessible package repositories
-- 'recipe[selinux::disabled]' on RHEL platforms
 
 Platform Support
 ----------------
-The following platforms have been tested with Test Kitchen:
+The following platforms have been tested:
 
 ```
 |----------------+-----+------|
 |                | 5.5 | 10.0 |
 |----------------+-----+------|
-| debian-6       |     | X    |
+| debian-6       |  X  | X    |
 |----------------+-----+------|
-| debian-7       |     | X    |
+| debian-7       |  X  | X    |
 |----------------+-----+------|
-| ubuntu-10.04   |     | X    |
+| ubuntu-10.04   |  X  | X    |
 |----------------+-----+------|
-| ubuntu-12.04   |     | X    |
+| ubuntu-12.04   |  X  | X    |
 |----------------+-----+------|
-| ubuntu-14.04   |     | X    |
+| ubuntu-14.04   |  X  | X    |
 |----------------+-----+------|
-| centos-5       |   X | X    |
+| ubuntu-14.10   |  X  | X    |
 |----------------+-----+------|
-| centos-6       |     | X    |
+| centos-5       |  X  | X    |
 |----------------+-----+------|
-| centos-7       |     | X    |
+| centos-6       |  X  | X    |
 |----------------+-----+------|
-| suse-13        |     |      |
+| centos-7       |  X  | X    |
 |----------------+-----+------|
-| sles-11        |     |      |
+| suse-13        | recipes only |
 |----------------+-----+------|
-| sles-12        |     |      |
+| sles-11        |  X  | X    |
 |----------------+-----+------|
-| rhel-5         |     |      |
+| sles-12        |  X  | X    |
 |----------------+-----+------|
-| rhel-6         |     |      |
+| rhel-5         |  X  | X    |
 |----------------+-----+------|
-| rhel-7         |     |      |
+| rhel-6         |  X  | X    |
+|----------------+-----+------|
+| rhel-7         |  X  | X    |
+|----------------+-----+------|
+| Windows        | recipes only |
 |----------------+-----+------|
 ```
 
@@ -60,14 +61,36 @@ Cookbook Dependencies
 
 Usage
 -----
-Place a dependency on the MariaDB cookbook in your cookbook's metadata.rb
+
+For MariaDB Enterprise default version installation type in command line:
+
+`$ chef-solo -c solo.rb -o recipe[mariadb::install]`
+
+In a vagrant file (For 10.0.17 MDBE version):
+
+```ruby
+    config.vm.provision :chef_solo do |chef|
+      chef.cookbooks_path = "<bla-bla>/cookbooks"
+      chef.provisioning_path = "/tmp/vagrant-chef/chef-solo"
+      chef.json = {
+        :maria => {
+          version: 10.0.17 
+        }
+      }
+      chef.add_recipe "mariadb::install"
+    end
+```
+
+Or you can use MariaDB cookbook into your own cookbook. Place a dependency on the MariaDB cookbook in your cookbook's metadata.rb
+
 ```ruby
 depends 'mariadb', '~> 0'
 ```
 
-Then, in a recipe:
+Then, in recipe:
 
 ```ruby
+
 mysql_service 'foo' do
   port '3306'
   version '5.5'
@@ -128,29 +151,47 @@ end
 You are responsible for providing `my_extra_settings.erb` in your own
 cookbook's templates folder.
 
-Connecting with the mysql CLI command
--------------------------------------
-Logging into the machine and typing `mysql` with no extra arguments
-will fail. You need to explicitly connect over the socket with `mysql
--S /var/run/mysql-foo/mysqld.sock`, or over the network with `mysql -h
-127.0.0.1`
-
-Upgrading from older version of the mysql cookbook
---------------------------------------------------
-- It is strongly recommended that you rebuild the machine from
-  scratch. This is easy if you have your `data_dir` on a dedicated
-  mount point. If you *must* upgrade in-place, follow the instructions
-  below.
-
-- The 6.x series supports multiple service instances on a single
-  machine. It dynamically names the support directories and service
-  names. `/etc/mysql becomes /etc/mysql-instance_name`. Other support
-  directories in `/var` `/run` etc work the same way. Make sure to
-  specify the `data_dir` property on the `mysql_service` resource to
-  point to the old `/var/lib/mysql` directory.
-
 Resources Overview
 ------------------
+### Recipes
+
+## install
+
+Installs particular version (10.0 by default) MariaDB Enterprise server.
+
+Usage:
+
+`$ chef-solo -c solo.rb -o recipe[mariadb::install]`
+
+## uninstall
+
+Removes both MariaDB Enterprise server & client.
+
+Usage:
+
+`$ chef-solo -c solo.rb -o recipe[mariadb::uninstall]`
+
+## purge
+
+Removes both MariaDB Enterprise server & client and REMOVE ALL DATA and configurations, turns off repositories.
+
+## start
+
+Creates (doesn't install MariaDB!) and starts MariaDB Enterprise server daemon with particular params. For example:
+
+```ruby
+    config.vm.provision :chef_solo do |chef|
+      chef.cookbooks_path = "<bla-bla>/cookbooks"
+      chef.provisioning_path = "/tmp/vagrant-chef/chef-solo"
+      chef.json = {
+        :maria => {
+          bind_address: 127.0.0.1
+        }
+      }
+      chef.add_recipe "mariadb::start"
+    end
+```
+
 ### mysql_service
 
 The `mysql_service` resource manages the basic plumbing needed to get a
@@ -261,87 +302,9 @@ using SysVinit. Manages the init script and status.
 - `Chef::Provider::MysqlService::Upstart` - Starts a `mysql_service`
 using Upstart. Manages job definitions and status.
 
-Advanced Usage Examples
------------------------
-There are a number of configuration scenarios supported by the use of
-resource primitives in recipes. For example, you might want to run
-multiple MySQL services, as different users, and mount block devices
-that contain pre-existing databases.
-
-### Multiple Instances as Different Users
-
-```ruby
-# instance-1
-user 'alice' do
-  action :create
-end
-
-directory '/mnt/data/mysql/instance-1' do
-  owner 'alice'
-  action :create
-end
-
-mount '/mnt/data/mysql/instance-1' do
-  device '/dev/sdb1'
-  fstype 'ext4'
-  action [:mount, :enable]
-end
-
-mysql_service 'instance-1' do
-  port '3307'
-  run_user 'alice'
-  data_dir '/mnt/data/mysql/instance-1'
-  action [:create, :start]
-end
-
-mysql_config 'site config for instance-1' do
-  instance 'instance-1'
-  source 'instance-1.cnf.erb'
-  notifies :restart, 'mysql_service[instance-1]'
-end
-
-# instance-2
-user 'bob' do
-  action :create
-end
-
-directory '/mnt/data/mysql/instance-2' do
-  owner 'bob'
-  action :create
-end
-
-mount '/mnt/data/mysql/instance-2' do
-  device '/dev/sdc1'
-  fstype 'ext3'
-  action [:mount, :enable]
-end
-
-mysql_service 'instance-2' do
-  port '3308'
-  run_user 'bob'
-  data_dir '/mnt/data/mysql/instance-2'
-  action [:create, :start]
-end
-
-mysql_config 'site config for instance-2' do
-  instance 'instance-2'
-  source 'instance-2.cnf.erb'
-  notifies :restart, 'mysql_service[instance-2]'
-end
-```
-Warnings
---------
-
-License & Authors
+License
 -----------------
-- Author:: Joshua Timberman (<joshua@chef.io>)
-- Author:: AJ Christensen (<aj@chef.io>)
-- Author:: Seth Chisamore (<schisamo@chef.io>)
-- Author:: Brian Bianco (<brian.bianco@gmail.com>)
-- Author:: Jesse Howarth (<him@jessehowarth.com>)
-- Author:: Andrew Crump (<andrew@kotirisoftware.com>)
-- Author:: Christoph Hartmann (<chris@lollyrock.com>)
-- Author:: Sean OMeara (<sean@chef.io>)
+Forked from https://github.com/chef-cookbooks/mysql
 
 ```text
 Copyright:: 2009-2014 Chef Software, Inc

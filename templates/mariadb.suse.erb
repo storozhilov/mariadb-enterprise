@@ -1,6 +1,6 @@
 [mariadb]
 name = MariaDB
 autorefresh=0
-baseurl = https://code.mariadb.com/mariadb-enterprise/<%= node['maria']['version'] %>/yum/PLATFORM/<%= node[:platform_version].to_i %>/$basearch
+baseurl = <%= node['maria']['repo'] %><%= node['maria']['version'] %>/yum/PLATFORM/<%= node[:platform_version].to_i %>/$basearch
 gpgkey=https://downloads.mariadb.com/files/MariaDB/RPM-GPG-KEY-MariaDB-Ent
 gpgcheck=0

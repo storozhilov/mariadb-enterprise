@@ -1,4 +1,6 @@
 node.set_unless['maria']['version'] = "10.0"
+node.set_unless['maria']['token'] = ""
+node.set_unless['maria']['repo'] = "http://code.mariadb.com/mariadb-enterprise/" + node['maria']['token'] + "/"
 
 case node[:platform_family]
 when "debian"
@@ -9,7 +11,7 @@ when "debian"
   release_name = '$(lsb_release -cs)'
   # Add repo
   execute "Repository add" do
-    command 'echo "deb http://code.mariadb.com/mariadb-enterprise/'+ node['maria']['version'] + '/repo/' + node[:platform] + ' ' + release_name + ' main" > /etc/apt/sources.list.d/mariadb.list'
+    command 'echo "deb ' + node['maria']['repo'] + node['maria']['version'] + '/repo/' + node[:platform] + ' ' + release_name + ' main" > /etc/apt/sources.list.d/mariadb.list'
   end
   execute "update" do
     command "apt-get update"
@@ -35,7 +37,7 @@ when "windows"
   
   md5sums_file = "#{Chef::Config[:file_cache_path]}/md5sums.txt"
   remote_file "#{md5sums_file}" do
-    source "https://code.mariadb.com/mariadb-enterprise/" + node['maria']['version'] + "/" + arch + "-packages/md5sums.txt"
+    source node['maria']['repo'] + node['maria']['version'] + "/" + arch + "-packages/md5sums.txt"
   end
 
   file_name = "mariadb-enterprise-" + node['maria']['version'] + "-" + arch + ".msi"
@@ -53,6 +55,6 @@ when "windows"
   end
 
   remote_file "#{Chef::Config[:file_cache_path]}/mariadb.msi" do
-    source "https://code.mariadb.com/mariadb-enterprise/" + node['maria']['version'] + "/" + arch + "-packages/" + file_name
+    source node['maria']['repo'] + node['maria']['version'] + "/" + arch + "-packages/" + file_name
   end
 end

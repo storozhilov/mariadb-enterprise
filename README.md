@@ -74,12 +74,15 @@ In a vagrant file (For 10.0.17 MDBE version):
       chef.provisioning_path = "/tmp/vagrant-chef/chef-solo"
       chef.json = {
         :maria => {
-          version: 10.0.17 
+          version: 10.0.17,
+          token = 'MY SECRET TOKEN'
         }
       }
       chef.add_recipe "mariadb::install"
     end
 ```
+
+You can get authentication token on http://mariadb.com.
 
 Or you can use MariaDB cookbook into your own cookbook. Place a dependency on the MariaDB cookbook in your cookbook's metadata.rb
 

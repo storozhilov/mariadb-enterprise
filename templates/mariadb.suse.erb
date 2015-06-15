@@ -1,5 +1,5 @@
-[mariadb]
-name = MariaDB
+[<%= node['maria']['name'] %>]
+name = <%= node['maria']['name'] %>
 autorefresh=0
 baseurl = <%= node['maria']['repo'] %><%= node['maria']['version'] %>/yum/PLATFORM/<%= node[:platform_version].to_i %>/$basearch
 gpgkey=https://downloads.mariadb.com/files/MariaDB/RPM-GPG-KEY-MariaDB-Ent

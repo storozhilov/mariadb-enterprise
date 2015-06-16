@@ -1,4 +1,4 @@
-node.set_unless['mariadb']['instance'] = 'default'
+include_recipe "mariadb::default"
 
 mysql_service node['mariadb']['instance'] do
   if (defined?(node['mariadb']['initial_root_password']))

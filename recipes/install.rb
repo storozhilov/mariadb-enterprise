@@ -31,11 +31,4 @@ else
   package 'MariaDB-client'
 end
 
-# Starts service
-case node[:platform_family]
-when "windows"
-else
-  service "mysql" do
-    action :start
-  end 
-end
+include_recipe "mariadb::start"

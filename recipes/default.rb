@@ -5,4 +5,6 @@ node.set_unless['mariadb']['name'] = "mariadb"
 
 node.set_unless['mariadb']['base_dir'] = "/usr"
 node.set_unless['mariadb']['data_dir'] = "/var/lib/mysql"
-#node.set_unless['mariadb']['socket_file'] = ""
+node.set_unless['mariadb']['socket'] = "/var/lib/mysql/mysql.sock"
+
+node.set_unless['mariadb']['instance'] = 'default'

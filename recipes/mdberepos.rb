@@ -1,7 +1,4 @@
-node.set_unless['maria']['version'] = "10.0"
-node.set_unless['maria']['token'] = ""
-node.set_unless['maria']['repo'] = "http://code.mariadb.com/mariadb-enterprise/" + node['maria']['token'] + "/"
-node.set_unless['maria']['name'] = "mariadb"
+include_recipe "mariadb::default"
 
 case node[:platform_family]
 when "debian"
@@ -12,36 +9,36 @@ when "debian"
   release_name = '$(lsb_release -cs)'
   # Add repo
   execute "Repository add" do
-    command 'echo "deb ' + node['maria']['repo'] + node['maria']['version'] + '/repo/' + node[:platform] + ' ' + release_name + ' main" > /etc/apt/sources.list.d/' + node['maria']['name'] + '.list'
+    command 'echo "deb ' + node['mariadb']['repo'] + node['mariadb']['version'] + '/repo/' + node[:platform] + ' ' + release_name + ' main" > /etc/apt/sources.list.d/' + node['mariadb']['name'] + '.list'
   end
   execute "update" do
     command "apt-get update"
   end
 when "rhel", "fedora"
   # Add the repo
-  template "/etc/yum.repos.d/#{node['maria']['name']}.repo" do
+  template "/etc/yum.repos.d/#{node['mariadb']['name']}.repo" do
     source "mariadb.rhel.erb"
     action :create
   end
 when "suse"
   # Add the repo
-  template "/etc/zypp/repos.d/#{node['maria']['name']}.repo.template" do
+  template "/etc/zypp/repos.d/#{node['mariadb']['name']}.repo.template" do
     source "mariadb.suse.erb"
     action :create
   end
   release_name = "test -f /etc/os-release && cat /etc/os-release | grep '^ID=' | sed s/'^ID='//g | sed s/'\"'//g || if cat /etc/SuSE-release | grep Enterprise &>/dev/null; then echo sles; else echo opensuse; fi"
   execute "Change suse on sles repository" do
-    command "cat /etc/zypp/repos.d/#{node['maria']['name']}.repo.template | sed s/PLATFORM/$(" + release_name + ")/g > /etc/zypp/repos.d/#{node['maria']['name']}.repo"
+    command "cat /etc/zypp/repos.d/#{node['mariadb']['name']}.repo.template | sed s/PLATFORM/$(" + release_name + ")/g > /etc/zypp/repos.d/#{node['mariadb']['name']}.repo"
   end
 when "windows"
   arch = node[:kernel][:machine] == "x86_64" ? "winx64" : "win32"
   
   md5sums_file = "#{Chef::Config[:file_cache_path]}/md5sums.txt"
   remote_file "#{md5sums_file}" do
-    source node['maria']['repo'] + node['maria']['version'] + "/" + arch + "-packages/md5sums.txt"
+    source node['mariadb']['repo'] + node['mariadb']['version'] + "/" + arch + "-packages/md5sums.txt"
   end
 
-  file_name = "mariadb-enterprise-" + node['maria']['version'] + "-" + arch + ".msi"
+  file_name = "mariadb-enterprise-" + node['mariadb']['version'] + "-" + arch + ".msi"
 
   if File.exists?("#{md5sums_file}")
     f = File.open("#{md5sums_file}")
@@ -56,6 +53,6 @@ when "windows"
   end
 
   remote_file "#{Chef::Config[:file_cache_path]}/mariadb.msi" do
-    source node['maria']['repo'] + node['maria']['version'] + "/" + arch + "-packages/" + file_name
+    source node['mariadb']['repo'] + node['mariadb']['version'] + "/" + arch + "-packages/" + file_name
   end
 end

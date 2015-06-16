@@ -187,7 +187,7 @@ Creates (doesn't install MariaDB!) and starts MariaDB Enterprise server daemon w
       chef.cookbooks_path = "<bla-bla>/cookbooks"
       chef.provisioning_path = "/tmp/vagrant-chef/chef-solo"
       chef.json = {
-        :maria => {
+        :mariadb => {
           bind_address: 127.0.0.1
         }
       }

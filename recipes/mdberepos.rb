@@ -6,10 +6,15 @@ when "debian"
   execute "Key add" do
     command "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xce1a3dd5e3c94f49"
   end
-  release_name = '$(lsb_release -cs)'
+  
+  lsb_release = Mixlib::ShellOut.new("lsb_release -cs")
+  lsb_release.run_command
+  node.default['mariadb']['release_name'] = lsb_release.stdout.chop
+
   # Add repo
-  execute "Repository add" do
-    command 'echo "deb ' + node['mariadb']['repo'] + node['mariadb']['version'] + '/repo/' + node[:platform] + ' ' + release_name + ' main" > /etc/apt/sources.list.d/' + node['mariadb']['name'] + '.list'
+  template "/etc/apt/sources.list.d/#{node['mariadb']['name']}.list" do
+    source "mariadb.deb.erb"
+    action :create
   end
   execute "update" do
     command "apt-get update"
@@ -21,14 +26,14 @@ when "rhel", "fedora"
     action :create
   end
 when "suse"
+  release_name_cmd = "test -f /etc/os-release && cat /etc/os-release | grep '^ID=' | sed s/'^ID='//g | sed s/'\"'//g || if cat /etc/SuSE-release | grep Enterprise &>/dev/null; then echo sles; else echo opensuse; fi"
+  release = Mixlib::ShellOut.new(release_name_cmd)
+  release.run_command
+  node.default['mariadb']['release_name'] = release.stdout.chop
   # Add the repo
-  template "/etc/zypp/repos.d/#{node['mariadb']['name']}.repo.template" do
+  template "/etc/zypp/repos.d/#{node['mariadb']['name']}.repo" do
     source "mariadb.suse.erb"
     action :create
-  end
-  release_name = "test -f /etc/os-release && cat /etc/os-release | grep '^ID=' | sed s/'^ID='//g | sed s/'\"'//g || if cat /etc/SuSE-release | grep Enterprise &>/dev/null; then echo sles; else echo opensuse; fi"
-  execute "Change suse on sles repository" do
-    command "cat /etc/zypp/repos.d/#{node['mariadb']['name']}.repo.template | sed s/PLATFORM/$(" + release_name + ")/g > /etc/zypp/repos.d/#{node['mariadb']['name']}.repo"
   end
 when "windows"
   arch = node[:kernel][:machine] == "x86_64" ? "winx64" : "win32"

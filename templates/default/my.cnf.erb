@@ -1,4 +1,4 @@
-# Chef generated my.cnf for instance mysql-<%= @config.name %>
+# Chef generated my.cnf for instance <%= @mysql_name %>
 
 [client]
 <% if @config.charset %>
@@ -34,6 +34,9 @@ port                           = <%= @config.port %>
 <% end %>
 <% if @data_dir %>
 datadir                        = <%= @data_dir %>
+<% end %>
+<% if @base_dir %>
+basedir                        = <%= @base_dir %>
 <% end %>
 <% if @tmp_dir %>
 tmpdir                         = <%= @tmp_dir %>

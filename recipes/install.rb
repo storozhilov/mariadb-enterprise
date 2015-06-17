@@ -20,6 +20,9 @@ when "suse"
 when "debian"
   package 'mariadb-server'
   package 'mariadb-client'
+  service "mysql" do
+    action :stop
+  end 
 when "windows"
   windows_package "MariaDB" do
     source "#{Chef::Config[:file_cache_path]}/mariadb.msi"

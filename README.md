@@ -40,7 +40,7 @@ The following platforms have been tested:
 |----------------+-----+------|
 | centos-7       |  X  | X    |
 |----------------+-----+------|
-| suse-13        | recipes only |
+| suse-13        |  X  | X    |
 |----------------+-----+------|
 | sles-11        |  X  | X    |
 |----------------+-----+------|
@@ -52,7 +52,7 @@ The following platforms have been tested:
 |----------------+-----+------|
 | rhel-7         |  X  | X    |
 |----------------+-----+------|
-| Windows        | recipes only |
+| Windows        | partially  |
 |----------------+-----+------|
 ```
 
@@ -166,6 +166,11 @@ Usage:
 
 `$ chef-solo -c solo.rb -o recipe[mariadb::install]`
 
+Parameters are:
+
+- `mariadb::token` - your seckret token
+- `mariadb::version` - version of Maria DB
+
 ## uninstall
 
 Removes both MariaDB Enterprise server & client.
@@ -177,6 +182,10 @@ Usage:
 ## purge
 
 Removes both MariaDB Enterprise server & client and REMOVE ALL DATA and configurations, turns off repositories.
+
+Usage:
+
+`$ chef-solo -c solo.rb -o recipe[mariadb::purge]`
 
 ## start
 
@@ -194,6 +203,20 @@ Creates (doesn't install MariaDB!) and starts MariaDB Enterprise server daemon w
       chef.add_recipe "mariadb::start"
     end
 ```
+
+Parameters are:
+
+- `mariadb::initial_root_password` - root password
+
+- `mariadb::bind_address` - bind address
+
+- `mariadb::port` - port
+
+- `mariadb::socket` - socket file
+
+- `mariadb::data_dir` - data directory, /var/lib/mysql-<instance name> by default
+
+## Libraries
 
 ### mysql_service
 

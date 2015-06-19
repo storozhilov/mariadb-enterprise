@@ -1,3 +1,5 @@
+include_recipe "mariadb::default"
+
 case node[:platform_family]
 when "debian"
   package "mariadb-common" do

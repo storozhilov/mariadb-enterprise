@@ -149,6 +149,11 @@ class Chef
           not_if "/usr/bin/test -f #{parsed_data_dir}/mysql/user.frm"
           action :run
         end
+        bash "#{new_resource.name} :create chcon" do
+          code change_context
+          only_if "/usr/bin/test -f #{parsed_data_dir}/mysql/user.frm"
+          action :run
+        end
       end
 
       action :delete do

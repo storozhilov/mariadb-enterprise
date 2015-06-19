@@ -141,6 +141,18 @@ module MysqlCookbook
       mysql_install_db_cmd
     end
 
+    def change_context
+      return "chcon -R system_u:object_r:mysqld_db_t:s0 #{parsed_data_dir} #{run_dir} #{change_persistent_context}" if node['platform_family'] == 'rhel' || node['platform_family'] == 'suse'
+      ""
+    end
+
+    def change_persistent_context
+      ch_data_ctx_cmd = "semanage fcontext -a -t mysqld_db_t #{parsed_data_dir}"
+      ch_run_ctx_cmd = "semanage fcontext -a -t mysqld_db_t #{run_dir}"
+      return " && #{ch_data_ctx_cmd} && #{ch_run_ctx_cmd}" if node['platform_family'] == 'rhel' && node['platform_version'].to_i >= 6
+      ""
+    end
+
     def init_records_script
       <<-EOS
         set -e
@@ -156,6 +168,7 @@ DROP DATABASE IF EXISTS test ;
 EOSQL
 
        #{db_init}
+       #{change_context}
        #{record_init}
 
        while [ ! -f #{pid_file} ] ; do sleep 1 ; done

@@ -1,4 +1,4 @@
-include_recipe "mariadb::mdberepos"
+include_recipe "mariadb::repos"
 
 # Turn off SElinux
 if node[:platform] == "centos" and node["platform_version"].to_f >= 6.0 

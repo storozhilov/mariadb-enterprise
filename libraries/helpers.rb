@@ -142,14 +142,14 @@ module MysqlCookbook
     end
 
     def change_context
-      return "chcon -R system_u:object_r:mysqld_db_t:s0 #{parsed_data_dir} #{run_dir} #{change_persistent_context}" if node['platform_family'] == 'rhel' || node['platform_family'] == 'suse'
+      return "which chcon && chcon -R system_u:object_r:mysqld_db_t:s0 #{parsed_data_dir} #{run_dir} #{change_persistent_context}" if node['platform_family'] == 'rhel'
       ""
     end
 
     def change_persistent_context
       ch_data_ctx_cmd = "semanage fcontext -a -t mysqld_db_t #{parsed_data_dir}"
       ch_run_ctx_cmd = "semanage fcontext -a -t mysqld_db_t #{run_dir}"
-      return " && #{ch_data_ctx_cmd} && #{ch_run_ctx_cmd}" if node['platform_family'] == 'rhel' && node['platform_version'].to_i >= 6
+      return " && which semanage && (#{ch_data_ctx_cmd} && #{ch_run_ctx_cmd}) || echo ''" if node['platform_family'] == 'rhel' && node['platform_version'].to_i >= 6
       ""
     end
 

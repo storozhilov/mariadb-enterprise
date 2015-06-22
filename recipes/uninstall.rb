@@ -11,4 +11,4 @@ when "rhel", "fedora", "suse"
   end
 end
 
-include_recipe "mariadb::mdberepos_off"
+include_recipe "mariadb::repos_off"

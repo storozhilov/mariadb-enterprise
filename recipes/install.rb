@@ -1,4 +1,4 @@
-include_recipe "mariadb::mdberepos"
+include_recipe "mariadb::repos"
 
 # Turn off SElinux
 if node[:platform] == "centos" and node["platform_version"].to_f >= 6.0 
@@ -20,6 +20,9 @@ when "suse"
 when "debian"
   package 'mariadb-server'
   package 'mariadb-client'
+  service "mysql" do
+    action :stop
+  end 
 when "windows"
   windows_package "MariaDB" do
     source "#{Chef::Config[:file_cache_path]}/mariadb.msi"
@@ -31,11 +34,4 @@ else
   package 'MariaDB-client'
 end
 
-# Starts service
-case node[:platform_family]
-when "windows"
-else
-  service "mysql" do
-    action :start
-  end 
-end
+include_recipe "mariadb::start"

@@ -9,7 +9,7 @@ class Chef
 
       attribute :charset, kind_of: String, default: 'utf8'
       attribute :data_dir, kind_of: String, default: nil
-      attribute :initial_root_password, kind_of: String, default: 'ilikerandompasswords'
+      attribute :initial_root_password, kind_of: String, default: '123456'
       attribute :instance, kind_of: String, name_attribute: true
       attribute :package_action, kind_of: Symbol, default: :install
       attribute :package_name, kind_of: String, default: nil

@@ -40,7 +40,7 @@ The following platforms have been tested:
 |----------------+-----+------|
 | centos-7       |  X  | X    |
 |----------------+-----+------|
-| suse-13        | recipes only |
+| suse-13        |  X  | X    |
 |----------------+-----+------|
 | sles-11        |  X  | X    |
 |----------------+-----+------|
@@ -52,7 +52,7 @@ The following platforms have been tested:
 |----------------+-----+------|
 | rhel-7         |  X  | X    |
 |----------------+-----+------|
-| Windows        | recipes only |
+| Windows        | partially  |
 |----------------+-----+------|
 ```
 
@@ -74,12 +74,15 @@ In a vagrant file (For 10.0.17 MDBE version):
       chef.provisioning_path = "/tmp/vagrant-chef/chef-solo"
       chef.json = {
         :maria => {
-          version: 10.0.17 
+          version: 10.0.17,
+          token = 'MY SECRET TOKEN'
         }
       }
       chef.add_recipe "mariadb::install"
     end
 ```
+
+You can get authentication token on http://mariadb.com.
 
 Or you can use MariaDB cookbook into your own cookbook. Place a dependency on the MariaDB cookbook in your cookbook's metadata.rb
 
@@ -163,6 +166,11 @@ Usage:
 
 `$ chef-solo -c solo.rb -o recipe[mariadb::install]`
 
+Parameters are:
+
+- `mariadb::token` - your seckret token
+- `mariadb::version` - version of Maria DB
+
 ## uninstall
 
 Removes both MariaDB Enterprise server & client.
@@ -175,6 +183,10 @@ Usage:
 
 Removes both MariaDB Enterprise server & client and REMOVE ALL DATA and configurations, turns off repositories.
 
+Usage:
+
+`$ chef-solo -c solo.rb -o recipe[mariadb::purge]`
+
 ## start
 
 Creates (doesn't install MariaDB!) and starts MariaDB Enterprise server daemon with particular params. For example:
@@ -184,13 +196,27 @@ Creates (doesn't install MariaDB!) and starts MariaDB Enterprise server daemon w
       chef.cookbooks_path = "<bla-bla>/cookbooks"
       chef.provisioning_path = "/tmp/vagrant-chef/chef-solo"
       chef.json = {
-        :maria => {
+        :mariadb => {
           bind_address: 127.0.0.1
         }
       }
       chef.add_recipe "mariadb::start"
     end
 ```
+
+Parameters are:
+
+- `mariadb::initial_root_password` - root password
+
+- `mariadb::bind_address` - bind address
+
+- `mariadb::port` - port
+
+- `mariadb::socket` - socket file
+
+- `mariadb::data_dir` - data directory, /var/lib/mysql-<instance name> by default
+
+## Libraries
 
 ### mysql_service
 

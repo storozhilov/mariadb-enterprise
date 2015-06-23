@@ -10,6 +10,7 @@ recipe            'install', 'Installs Enterprise edition'
 recipe            'uninstall', 'Uninstalls any edition'
 recipe            'purge', 'Uninstalls any edition and remove all data'
 recipe            'start', 'Creates new instance of service and starts it'
+recipe            'stop', 'Creates new instance of service and starts it'
 
 supports          'redhat'
 supports          'centos'

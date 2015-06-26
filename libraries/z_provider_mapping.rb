@@ -1,23 +1,11 @@
 # provider mappings for Chef 11
-
-#########
-# service
-#########
-Chef::Platform.set platform: :amazon, resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
-Chef::Platform.set platform: :centos, version: '< 7.0', resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
-Chef::Platform.set platform: :centos, version: '>= 7.0', resource: :mysql_service, provider: Chef::Provider::MysqlService::Systemd
-Chef::Platform.set platform: :debian, resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
-Chef::Platform.set platform: :fedora, version: '< 19', resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
-Chef::Platform.set platform: :fedora, version: '>= 19', resource: :mysql_service, provider: Chef::Provider::MysqlService::Systemd
-Chef::Platform.set platform: :omnios, resource: :mysql_service, provider: Chef::Provider::MysqlService::Smf
-Chef::Platform.set platform: :redhat, version: '< 7.0', resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
-Chef::Platform.set platform: :redhat, version: '>= 7.0', resource: :mysql_service, provider: Chef::Provider::MysqlService::Systemd
-Chef::Platform.set platform: :scientific, version: '< 7.0', resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
-Chef::Platform.set platform: :scientific, version: '>= 7.0', resource: :mysql_service, provider: Chef::Provider::MysqlService::Systemd
-Chef::Platform.set platform: :smartos, resource: :mysql_service, provider: Chef::Provider::MysqlService::Smf
-Chef::Platform.set platform: :suse, resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
-Chef::Platform.set platform: :opensuse, resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
-Chef::Platform.set platform: :ubuntu, resource: :mysql_service, provider: Chef::Provider::MysqlService::Upstart
+require_relative 'provider_mysql_client.rb'
+require_relative 'provider_mysql_config.rb'
+require_relative 'provider_mysql_service.rb'
+require_relative 'provider_mysql_service_smf.rb'
+require_relative 'provider_mysql_service_systemd.rb'
+require_relative 'provider_mysql_service_sysvinit.rb'
+require_relative 'provider_mysql_service_upstart.rb'
 
 #########
 # config
@@ -48,3 +36,21 @@ Chef::Platform.set platform: :smartos, resource: :mysql_client, provider: Chef::
 Chef::Platform.set platform: :suse, resource: :mysql_client, provider: Chef::Provider::MysqlClient
 Chef::Platform.set platform: :opensuse, resource: :mysql_client, provider: Chef::Provider::MysqlClient
 Chef::Platform.set platform: :ubuntu, resource: :mysql_client, provider: Chef::Provider::MysqlClient
+#########
+# service
+#########
+Chef::Platform.set platform: :amazon, resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
+Chef::Platform.set platform: :centos, version: '< 7.0', resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
+Chef::Platform.set platform: :centos, version: '>= 7.0', resource: :mysql_service, provider: Chef::Provider::MysqlService::Systemd
+Chef::Platform.set platform: :debian, resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
+Chef::Platform.set platform: :fedora, version: '< 19', resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
+Chef::Platform.set platform: :fedora, version: '>= 19', resource: :mysql_service, provider: Chef::Provider::MysqlService::Systemd
+Chef::Platform.set platform: :omnios, resource: :mysql_service, provider: Chef::Provider::MysqlService::Smf
+Chef::Platform.set platform: :redhat, version: '< 7.0', resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
+Chef::Platform.set platform: :redhat, version: '>= 7.0', resource: :mysql_service, provider: Chef::Provider::MysqlService::Systemd
+Chef::Platform.set platform: :scientific, version: '< 7.0', resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
+Chef::Platform.set platform: :scientific, version: '>= 7.0', resource: :mysql_service, provider: Chef::Provider::MysqlService::Systemd
+Chef::Platform.set platform: :smartos, resource: :mysql_service, provider: Chef::Provider::MysqlService::Smf
+Chef::Platform.set platform: :suse, resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
+Chef::Platform.set platform: :opensuse, resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
+Chef::Platform.set platform: :ubuntu, resource: :mysql_service, provider: Chef::Provider::MysqlService::Upstart

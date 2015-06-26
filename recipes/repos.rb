@@ -1,6 +1,6 @@
 include_recipe "mariadb::default"
 
-enterprise = node['mariadb']['token'] != "community"
+enterprise = node['mariadb']['token'] != ""
 
 case node[:platform_family]
 when "debian"

@@ -7,17 +7,29 @@ when "debian"
   execute "Downloading package...." do
     command "wget  https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/generate/#{node['mariadb']['version']}/mariadb-enterprise-repository.deb -O /tmp/mariadb-enterprise-repository.deb"
   end
-  package 'mariadb-enterprise-repository.deb'
+  package 'mariadb-enterprise-repository' do
+    source "/tmp/mariadb-enterprise-repository.deb"
+    provider Chef::Provider::Package::Dpkg
+    action :install
+  end
 when "rhel", "fedora"
   execute "Downloading package...." do
     command "wget  https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/generate/#{node['mariadb']['version']}/mariadb-enterprise-repository.rpm -O /tmp/mariadb-enterprise-repository.rpm"
   end
-  package 'mariadb-enterprise-repository.rpm'
+  package 'mariadb-enterprise-repository' do
+    source "/tmp/mariadb-enterprise-repository.rpm"
+    provider Chef::Provider::Package::Rpm
+    action :install
+  end
 when "suse"
   execute "Downloading package...." do
     command "wget  https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/generate/#{node['mariadb']['version']}/mariadb-enterprise-repository-suse.rpm -O /tmp/mariadb-enterprise-repository.rpm"
   end
-  package 'mariadb-enterprise-repository.rpm'
+  package 'mariadb-enterprise-repository' do
+    source "/tmp/mariadb-enterprise-repository.rpm"
+    provider Chef::Provider::Package::Rpm
+    action :install
+  end
 when "windows"
   repo = "http://code.mariadb.com/mariadb-enterprise/" + node['mariadb']['token'] + "/"
   arch = node[:kernel][:machine] == "x86_64" ? "winx64" : "win32"

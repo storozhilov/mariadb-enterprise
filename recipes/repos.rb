@@ -4,45 +4,20 @@ enterprise = node['mariadb']['token'] != ""
 
 case node[:platform_family]
 when "debian"
-  # Add repo key
-  key = enterprise ? "0xce1a3dd5e3c94f49" : "0xcbcb082a1bb943db"
-  execute "Key add" do
-    command "apt-key adv --recv-keys --keyserver keyserver.ubuntu.com #{key}"
+  execute "Downloading package...." do
+    command "wget  https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/generate/#{node['mariadb']['version']}/mariadb-enterprise-repository.deb -O /tmp/mariadb-enterprise-repository.deb"
   end
-  
-  lsb_release = Mixlib::ShellOut.new("lsb_release -cs")
-  lsb_release.run_command
-  node.default['mariadb']['release_name'] = lsb_release.stdout.chop
-
-  # Add repo
-  template "/etc/apt/sources.list.d/#{node['mariadb']['name']}.list" do
-    source "mariadb#{enterprise ? 'e' : ''}.deb.erb"
-    action :create
-  end
-  # Add repo
-  template "/etc/apt/preferences.d/#{node['mariadb']['name']}.pref" do
-    source "mariadb.pref.erb"
-    action :create
-  end
-  execute "update" do
-    command "apt-get update"
-  end
+  package 'mariadb-enterprise-repository.deb'
 when "rhel", "fedora"
-  # Add the repo
-  template "/etc/yum.repos.d/#{node['mariadb']['name']}.repo" do
-    source "mariadb#{enterprise ? 'e' : ''}.rhel.erb"
-    action :create
+  execute "Downloading package...." do
+    command "wget  https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/generate/#{node['mariadb']['version']}/mariadb-enterprise-repository.rpm -O /tmp/mariadb-enterprise-repository.rpm"
   end
+  package 'mariadb-enterprise-repository.rpm'
 when "suse"
-  release_name_cmd = "test -f /etc/os-release && cat /etc/os-release | grep '^ID=' | sed s/'^ID='//g | sed s/'\"'//g || if cat /etc/SuSE-release | grep Enterprise &>/dev/null; then echo sles; else echo opensuse; fi"
-  release = Mixlib::ShellOut.new(release_name_cmd)
-  release.run_command
-  node.default['mariadb']['release_name'] = release.stdout.chop
-  # Add the repo
-  template "/etc/zypp/repos.d/#{node['mariadb']['name']}.repo" do
-    source "mariadb#{enterprise ? 'e' : ''}.suse.erb"
-    action :create
+  execute "Downloading package...." do
+    command "wget  https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/generate/#{node['mariadb']['version']}/mariadb-enterprise-repository-suse.rpm -O /tmp/mariadb-enterprise-repository.rpm"
   end
+  package 'mariadb-enterprise-repository.rpm'
 when "windows"
   repo = "http://code.mariadb.com/mariadb-enterprise/" + node['mariadb']['token'] + "/"
   arch = node[:kernel][:machine] == "x86_64" ? "winx64" : "win32"

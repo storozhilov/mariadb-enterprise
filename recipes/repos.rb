@@ -1,5 +1,5 @@
 include_recipe "mariadb::default"
-repo = "https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/mariadb-enterprise/"
+repo = "https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/"
 case node[:platform_family]
 when "debian"
   execute "Downloading package...." do
@@ -35,7 +35,7 @@ when "windows"
   arch = node[:kernel][:machine] == "x86_64" ? "winx64" : "win32"
   md5sums_file = "#{Chef::Config[:file_cache_path]}/md5sums.txt"
   remote_file "#{md5sums_file}" do
-    source repo + node['mariadb']['version'] + "/" + arch + "-packages/md5sums.txt"
+    source repo + "mariadb-enterprise/" + node['mariadb']['version'] + "/" + arch + "-packages/md5sums.txt"
   end
 
   file_name = "mariadb-enterprise-" + node['mariadb']['version'] + "-" + arch + ".msi"

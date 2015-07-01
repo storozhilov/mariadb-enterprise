@@ -34,7 +34,7 @@ when "suse"
     action :install
   end
 when "windows"
-  repo = "http://code.mariadb.com/mariadb-enterprise/" + node['mariadb']['token'] + "/"
+  repo = "https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/mariadb-enterprise/"
   arch = node[:kernel][:machine] == "x86_64" ? "winx64" : "win32"
   
   md5sums_file = "#{Chef::Config[:file_cache_path]}/md5sums.txt"

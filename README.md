@@ -82,7 +82,7 @@ In a vagrant file (For 10.0.17 MDBE version):
     end
 ```
 
-You can get authentication token on http://mariadb.com or skip it to install community version.
+You can get authentication token on http://mariadb.com.
 
 Or you can use MariaDB cookbook into your own cookbook. Place a dependency on the MariaDB cookbook in your cookbook's metadata.rb
 

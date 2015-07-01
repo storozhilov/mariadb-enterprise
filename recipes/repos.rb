@@ -1,11 +1,9 @@
 include_recipe "mariadb::default"
-
-enterprise = node['mariadb']['token'] != ""
-
+repo = "https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/mariadb-enterprise/"
 case node[:platform_family]
 when "debian"
   execute "Downloading package...." do
-    command "wget  https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/generate/#{node['mariadb']['version']}/mariadb-enterprise-repository.deb -O /tmp/mariadb-enterprise-repository.deb"
+    command "wget  #{repo}/generate/#{node['mariadb']['version']}/mariadb-enterprise-repository.deb -O /tmp/mariadb-enterprise-repository.deb"
   end
   package 'mariadb-enterprise-repository' do
     source "/tmp/mariadb-enterprise-repository.deb"
@@ -17,7 +15,7 @@ when "debian"
   end
 when "rhel", "fedora"
   execute "Downloading package...." do
-    command "wget  https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/generate/#{node['mariadb']['version']}/mariadb-enterprise-repository.rpm -O /tmp/mariadb-enterprise-repository.rpm"
+    command "wget  #{repo}/generate/#{node['mariadb']['version']}/mariadb-enterprise-repository.rpm -O /tmp/mariadb-enterprise-repository.rpm"
   end
   package 'mariadb-enterprise-repository' do
     source "/tmp/mariadb-enterprise-repository.rpm"
@@ -26,7 +24,7 @@ when "rhel", "fedora"
   end
 when "suse"
   execute "Downloading package...." do
-    command "wget  https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/generate/#{node['mariadb']['version']}/mariadb-enterprise-repository-suse.rpm -O /tmp/mariadb-enterprise-repository.rpm"
+    command "wget  #{repo}/generate/#{node['mariadb']['version']}/mariadb-enterprise-repository-suse.rpm -O /tmp/mariadb-enterprise-repository.rpm"
   end
   package 'mariadb-enterprise-repository' do
     source "/tmp/mariadb-enterprise-repository.rpm"
@@ -34,9 +32,7 @@ when "suse"
     action :install
   end
 when "windows"
-  repo = "https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/mariadb-enterprise/"
   arch = node[:kernel][:machine] == "x86_64" ? "winx64" : "win32"
-  
   md5sums_file = "#{Chef::Config[:file_cache_path]}/md5sums.txt"
   remote_file "#{md5sums_file}" do
     source repo + node['mariadb']['version'] + "/" + arch + "-packages/md5sums.txt"

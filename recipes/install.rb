@@ -15,7 +15,7 @@ end  # Turn off SElinux
 case node[:platform_family]
 when "suse"
   execute "install" do
-    command "zypper -n install --from mariadb MariaDB-server MariaDB-client &> /vagrant/log"
+    command "zypper --non-interactive --no-gpg-checks --quiet --gpg-auto-import-keys -n install --from mariadb-enterprise-main MariaDB-server MariaDB-client &> /vagrant/log"
   end
 when "debian"
   package 'mariadb-server'

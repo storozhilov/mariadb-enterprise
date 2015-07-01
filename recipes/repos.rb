@@ -12,6 +12,9 @@ when "debian"
     provider Chef::Provider::Package::Dpkg
     action :install
   end
+  execute "Updating..." do
+    command "apt-get update"
+  end
 when "rhel", "fedora"
   execute "Downloading package...." do
     command "wget  https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/generate/#{node['mariadb']['version']}/mariadb-enterprise-repository.rpm -O /tmp/mariadb-enterprise-repository.rpm"

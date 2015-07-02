@@ -18,8 +18,7 @@ when "suse"
     command "zypper -n install --from mariadb MariaDB-server MariaDB-client &> /vagrant/log"
   end
 when "debian"
-  package 'mariadb-galera-server'
-  package 'mariadb-galera-server-core-10.0-pgo'
+  package 'mariadb-galera-server-10.0-pgo'
   package 'mariadb-client'
   service "mysql" do
     action :stop
@@ -31,8 +30,7 @@ when "windows"
     action :install
   end
 else
-  package 'MariaDB-Galera-server'
-  package 'MariaDB-Galera-server-pgo'
+  package 'MariaDB-Galera-server-pgo-cluster'
   package 'MariaDB-client'
 end
 

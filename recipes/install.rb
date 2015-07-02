@@ -22,7 +22,7 @@ when "debian"
   package 'mariadb-client'
 #  package 'mariadb-server-core-10.0-pgo'
   execute "install" do
-    command "apt-get download mariadb-server-core-10.0-pgo && dpkg -i -B --force-all *.deb"
+    command "apt-get download mariadb-server-core-#{node['mariadb']['version']}-pgo && dpkg -i -B --force-all *.deb"
   end
 when "windows"
   windows_package "MariaDB" do

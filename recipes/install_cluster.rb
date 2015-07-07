@@ -30,7 +30,7 @@ when "windows"
     action :install
   end
 else
-  package 'MariaDB-Galera-server-pgo-cluster'
+  package 'MariaDB-Galera-server-pgo'
   package 'MariaDB-client'
 end
 

@@ -18,12 +18,8 @@ when "suse"
     command "zypper -n install --from mariadb MariaDB-server MariaDB-client &> /vagrant/log"
   end
 when "debian"
-  package 'mariadb-server'
   package 'mariadb-client'
-#  package 'mariadb-server-core-10.0-pgo'
-  execute "install" do
-    command "apt-get download mariadb-server-core-#{node['mariadb']['version']}-pgo && dpkg -i -B --force-all *.deb"
-  end
+  package 'mariadb-server-core-10.0-pgo'
 when "windows"
   windows_package "MariaDB" do
     source "#{Chef::Config[:file_cache_path]}/mariadb.msi"
@@ -31,7 +27,6 @@ when "windows"
     action :install
   end
 else
-  package 'MariaDB-server'
   package 'MariaDB-client'
   package 'MariaDB-server-pgo'
 end

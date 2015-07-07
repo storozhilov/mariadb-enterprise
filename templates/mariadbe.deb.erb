@@ -1,2 +1,2 @@
-deb http://code.mariadb.com/mariadb-enterprise/<%= node['mariadb']['version'] %>/repo/<%= node[:platform] %> <%= node['mariadb']['release_name'] %> main
-deb http://code.mariadb.com/mariadb-enterprise-pilot/<%= node[:platform] %> <%= node['mariadb']['release_name'] %> main
+deb http://downloads.mariadb.com/enterprise/<%= node['mariadb']['token'] %>/mariadb-enterprise/<%= node['mariadb']['version'] %>/repo/<%= node[:platform] %> <%= node['mariadb']['release_name'] %> main
+deb http://downloads.mariadb.com/enterprise/<%= node['mariadb']['token'] %>/mariadb-enterprise-pilot/<%= node[:platform] %> <%= node['mariadb']['release_name'] %> main

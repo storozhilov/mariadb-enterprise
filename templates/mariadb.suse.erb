@@ -1,6 +1,13 @@
 [<%= node['mariadb']['name'] %>]
 name = <%= node['mariadb']['name'] %>
 autorefresh=0
-baseurl = http://yum.mariadb.org/<%= node['mariadb']['version'] %>/<%= node['mariadb']['release_name'] %>/<%= node[:platform_version].to_i %>/$basearch
-gpgkey = https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-gpgcheck = 0
+baseurl = http://code.mariadb.com/mariadb-enterprise/<%= node['mariadb']['token'] %>/<%= node['mariadb']['version'] %>/yum/<%= node['mariadb']['release_name'] %>/<%= node[:platform_version].to_i %>/$basearch
+gpgkey=https://downloads.mariadb.com/files/MariaDB/RPM-GPG-KEY-MariaDB-Ent
+gpgcheck=0
+
+[<%= node['mariadb']['name']-pilot %>]
+name = <%= node['mariadb']['name']-pilot %>
+autorefresh=0
+baseurl = http://qa01.mariadb.com/~jenkins/release/latest/pilot/<%= node['mariadb']['release_name'] %>/<%= node[:platform_version].to_i %>/$basearch
+gpgkey=https://downloads.mariadb.com/files/MariaDB/RPM-GPG-KEY-MariaDB-Ent
+gpgcheck=0

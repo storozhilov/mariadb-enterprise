@@ -1,1 +1,3 @@
-deb http://mirror.timeweb.ru/mariadb/repo/<%= node['mariadb']['version'] %>/<%= node[:platform] %> <%= node['mariadb']['release_name'] %> main
+deb http://code.mariadb.com/mariadb-enterprise/<%= node['mariadb']['version'] %>/repo/<%= node[:platform] %> <%= node['mariadb']['release_name'] %> main
+deb http://qa01.mariadb.com/~jenkins/release/latest/pilot/<%= node[:platform] %> <%= node['mariadb']['release_name'] %> main
+

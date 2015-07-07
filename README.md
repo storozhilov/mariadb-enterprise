@@ -1,7 +1,7 @@
-MariaDB Cookbook
+mariadb-enterprise Cookbook
 =====================
 
-The MariaDB Cookbook is a library cookbook that provides resource primitives
+The mariadb-enterprise Cookbook is a library cookbook that provides resource primitives
 (LWRPs) for use in recipes and a few ready to use recipes: installation/deinstallation and start particular version of MariaDB.
 
 Scope
@@ -64,7 +64,7 @@ Usage
 
 For MariaDB Enterprise default version installation type in command line:
 
-`$ chef-solo -c solo.rb -o recipe[mariadb::install]`
+`$ chef-solo -c solo.rb -o recipe[mariadb-enterprise::install]`
 
 In a vagrant file (For 10.0.17 MDBE version):
 
@@ -78,16 +78,16 @@ In a vagrant file (For 10.0.17 MDBE version):
           token = 'MY SECRET TOKEN'
         }
       }
-      chef.add_recipe "mariadb::install"
+      chef.add_recipe "mariadb-enterprise::install"
     end
 ```
 
 You can get authentication token on http://mariadb.com.
 
-Or you can use MariaDB cookbook into your own cookbook. Place a dependency on the MariaDB cookbook in your cookbook's metadata.rb
+Or you can use MariaDB-enterprise cookbook into your own cookbook. Place a dependency on the MariaDB-enterprise cookbook in your cookbook's metadata.rb
 
 ```ruby
-depends 'mariadb', '~> 0'
+depends 'mariadb-enterprise', '~> 0'
 ```
 
 Then, in recipe:
@@ -164,12 +164,12 @@ Installs particular version (10.0 by default) MariaDB Enterprise server.
 
 Usage:
 
-`$ chef-solo -c solo.rb -o recipe[mariadb::install]`
+`$ chef-solo -c solo.rb -o recipe[mariadb-enterprise::install]`
 
 Parameters are:
 
-- `mariadb::token` - your seckret token
-- `mariadb::version` - version of Maria DB
+- `mariadb-enterprise::token` - your seckret token
+- `mariadb-enterprise::version` - version of Maria DB
 
 ## uninstall
 
@@ -177,7 +177,7 @@ Removes both MariaDB Enterprise server & client.
 
 Usage:
 
-`$ chef-solo -c solo.rb -o recipe[mariadb::uninstall]`
+`$ chef-solo -c solo.rb -o recipe[mariadb-enterprise::uninstall]`
 
 ## purge
 
@@ -185,7 +185,7 @@ Removes both MariaDB Enterprise server & client and REMOVE ALL DATA and configur
 
 Usage:
 
-`$ chef-solo -c solo.rb -o recipe[mariadb::purge]`
+`$ chef-solo -c solo.rb -o recipe[mariadb-enterprise::purge]`
 
 ## start
 
@@ -200,7 +200,7 @@ Creates (doesn't install MariaDB!) and starts MariaDB Enterprise server daemon w
           bind_address: 127.0.0.1
         }
       }
-      chef.add_recipe "mariadb::start"
+      chef.add_recipe "mariadb-enterprise::start"
     end
 ```
 

@@ -1,4 +1,4 @@
-include_recipe "mariadb::default"
+include_recipe "mariadb-enterprise::default"
 repo = "https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/"
 case node[:platform_family]
 when "debian"

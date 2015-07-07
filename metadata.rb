@@ -1,4 +1,4 @@
-name              'mariadb'
+name              'mariadb-enterprise'
 maintainer        'MariaDB, Inc.'
 maintainer_email  'Andrey.Kuznetsov@mariadb.com'
 license           'Apache 2.0'

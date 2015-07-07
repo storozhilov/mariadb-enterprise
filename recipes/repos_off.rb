@@ -1,4 +1,4 @@
-include_recipe "mariadb::default"
+include_recipe "mariadb-enterprise::default"
 package 'mariadb-enterprise-repository' do
   action :remove
 end

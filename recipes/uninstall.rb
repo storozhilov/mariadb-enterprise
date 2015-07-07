@@ -1,4 +1,4 @@
-include_recipe "mariadb::default"
+include_recipe "mariadb-enterprise::default"
 
 case node[:platform_family]
 when "debian"
@@ -11,4 +11,4 @@ when "rhel", "fedora", "suse"
   end
 end
 
-include_recipe "mariadb::repos_off"
+include_recipe "mariadb-enterprise::repos_off"

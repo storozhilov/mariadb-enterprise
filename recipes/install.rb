@@ -1,4 +1,4 @@
-include_recipe "mariadb::repos"
+include_recipe "mariadb-enterprise::repos"
 
 # Turn off SElinux
 if node[:platform] == "centos" and node["platform_version"].to_f >= 6.0 
@@ -34,4 +34,4 @@ else
   package 'MariaDB-client'
 end
 
-include_recipe "mariadb::start"
+include_recipe "mariadb-enterprise::start"

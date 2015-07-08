@@ -25,4 +25,14 @@ if defined?(ChefSpec)
   def delete_mysql_client(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:mysql_client, :delete, resource_name)
   end
+
+  # backup
+  def create_mysql_backup(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:mysql_backup, :create, resource_name)
+  end
+
+  def delete_mysql_backup(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:mysql_backup, :delete, resource_name)
+  end
+
 end

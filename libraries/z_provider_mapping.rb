@@ -54,3 +54,12 @@ Chef::Platform.set platform: :smartos, resource: :mysql_service, provider: Chef:
 Chef::Platform.set platform: :suse, resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
 Chef::Platform.set platform: :opensuse, resource: :mysql_service, provider: Chef::Provider::MysqlService::Sysvinit
 Chef::Platform.set platform: :ubuntu, resource: :mysql_service, provider: Chef::Provider::MysqlService::Upstart
+#########
+# backuper
+#########
+Chef::Platform.set platform: :centos, resource: :mysql_backup, provider: Chef::Provider::MysqlBackup
+Chef::Platform.set platform: :debian, resource: :mysql_backup, provider: Chef::Provider::MysqlBackup
+Chef::Platform.set platform: :fedora, resource: :mysql_backup, provider: Chef::Provider::MysqlBackup
+Chef::Platform.set platform: :redhat, resource: :mysql_backup, provider: Chef::Provider::MysqlBackup
+Chef::Platform.set platform: :suse, resource: :mysql_backup, provider: Chef::Provider::MysqlBackup
+Chef::Platform.set platform: :ubuntu, resource: :mysql_backup, provider: Chef::Provider::MysqlBackup

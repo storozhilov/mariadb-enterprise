@@ -216,6 +216,71 @@ Parameters are:
 
 - `mariadb::data_dir` - data directory, /var/lib/mysql-<instance name> by default
 
+## install_backuper
+
+Installs MariaDB backuper package (Percona Xtrabackup).
+
+Usage:
+
+`$ chef-solo -c solo.rb -o recipe[mariadb-enterprise::install_backuper]`
+
+or 
+
+```ruby
+    config.vm.provision :chef_solo do |chef|
+      chef.cookbooks_path = "<bla-bla>/cookbooks"
+      chef.provisioning_path = "/tmp/vagrant-chef/chef-solo"
+      chef.json = {
+        :mariadb => {
+          token = 'MY SECRET TOKEN'
+        }
+      }
+      chef.add_recipe "mariadb-enterprise::install_backuper"
+    end
+```
+
+Params:
+
+`mariadb::token` - your secret token, you can get it on mariadb.com.
+
+## uninstall
+
+Uninstalls MariaDB backuper.
+
+Usage:
+
+`$ chef-solo -c solo.rb -o recipe[mariadb-enterprise::uninstall_backuper]`
+
+## backup
+
+Creates DB backup.
+
+Usage:
+
+`$ chef-solo -c solo.rb -o recipe[mariadb-enterprise::backup]`
+
+Params:
+
+- `mariadb::instance` - instance what backup is created for (see )
+- `mariadb::backups_dir` - directory where backups are stored (/data/backups/mysql by default)
+- `mariadb::root_password` - your DB's root password
+
+## restore
+
+Restores the last (by default) backup.
+
+Usage:
+
+`$ chef-solo -c solo.rb -o recipe[mariadb-enterprise::restore]`
+
+Params:
+
+- `mariadb::instance` - instance what backup is created for (see )
+- `mariadb::restore_source_dir` - directory where particular backup is stored (by default the last is used)
+- `mariadb::backups_dir` - directory where backups are stored (/data/backups/mysql by default)
+- `mariadb::root_password` - your DB's root password
+
+
 ## Libraries
 
 ### mysql_service
@@ -300,6 +365,19 @@ omitted, it will default to the platform's native location.
 - `:restart` - Restarts the underlying operating system service
 - `:reload` - Reloads the underlying operating system service
 
+### backup
+
+```ruby
+mysql_backup 'instance' do
+  restore_source_dir "/data/backups/mysql/2010-05-06-12-47-00"
+  backups_dir "/data/backups/mysql"
+  root_password 'root_password'
+  action :restore
+end
+```
+
+There are two actions: `:create` and `:restore`, parameters lists are the same with lists for appropriate recipes.
+
 #### Providers
 Chef selects the appropriate provider based on platform and version,
 but you can specify one if your platform support it.
@@ -327,6 +405,7 @@ using SysVinit. Manages the init script and status.
 
 - `Chef::Provider::MysqlService::Upstart` - Starts a `mysql_service`
 using Upstart. Manages job definitions and status.
+
 
 License
 -----------------

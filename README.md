@@ -243,7 +243,7 @@ Params:
 
 `mariadb::token` - your secret token, you can get it on mariadb.com.
 
-## uninstall
+## uninstall_backuper
 
 Uninstalls MariaDB backuper.
 

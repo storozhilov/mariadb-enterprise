@@ -18,8 +18,14 @@ when "suse"
     command "zypper -n install --from mariadb MariaDB-server MariaDB-client &> /vagrant/log"
   end
 when "debian"
-  package 'mariadb-galera-server-10.0-pgo'
-  package 'mariadb-client'
+  package "mariadb-galera-server-#{node['mariadb']['version']}-pgo" do
+    action :install
+    options '--force-yes'
+  end
+  package 'mariadb-client' do
+    action :install
+    options '--force-yes'
+  end
   service "mysql" do
     action :stop
   end 

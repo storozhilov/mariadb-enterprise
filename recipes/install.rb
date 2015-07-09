@@ -18,8 +18,14 @@ when "suse"
     command "zypper -n install --from mariadb MariaDB-server MariaDB-client &> /vagrant/log"
   end
 when "debian"
-  package 'mariadb-client'
-  package 'mariadb-server-core-10.0-pgo'
+  package 'mariadb-client' do
+    action :install
+    options '--force-yes'
+  end
+  package "mariadb-server-core-#{node['mariadb']['version']}-pgo" do
+    action :install
+    options '--force-yes'
+  end
 when "windows"
   windows_package "MariaDB" do
     source "#{Chef::Config[:file_cache_path]}/mariadb.msi"

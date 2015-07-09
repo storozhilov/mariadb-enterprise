@@ -19,6 +19,10 @@ when "debian"
     source "mariadb#{enterprise ? 'e' : ''}.deb.erb"
     action :create
   end
+  template "/etc/apt/preferences.d/#{node['mariadb']['name']}.pref" do
+    source "mariadbe.pref.erb"
+    action :create
+  end
   execute "update" do
     command "apt-get update"
   end

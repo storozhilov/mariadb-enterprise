@@ -26,6 +26,9 @@ when "debian"
     action :install
     options '--force-yes'
   end
+  service "mysql" do
+    action :stop
+  end
 when "windows"
   windows_package "MariaDB" do
     source "#{Chef::Config[:file_cache_path]}/mariadb.msi"

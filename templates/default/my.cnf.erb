@@ -50,6 +50,9 @@ log-error                      = <%= @error_log %>
 <% if @include_dir %>
 !includedir <%= @include_dir %>
 <% end %>
+<% if @include_original_dir %>
+!includedir <%= @include_original_dir %>
+<% end %>
 
 [mysqld_safe]
 <% if @socket_file %>

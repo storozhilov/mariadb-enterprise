@@ -47,6 +47,10 @@ module MysqlCookbook
       "#{etc_dir}/conf.d"
     end
 
+    def include_original_dir
+      "#{etc_dir}/original.conf.d"
+    end
+
     def lc_messages_dir
     end
 

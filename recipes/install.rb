@@ -22,7 +22,7 @@ when "debian"
     action :install
     options '--force-yes'
   end
-  package "mariadb-server-core-#{node['mariadb']['version']}-pgo" do
+  package "mariadb-server-#{node['mariadb']['version']}-pgo" do
     action :install
     options '--force-yes'
   end

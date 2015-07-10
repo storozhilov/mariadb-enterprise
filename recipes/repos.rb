@@ -12,9 +12,6 @@ when "debian"
     provider Chef::Provider::Package::Dpkg
     action :install
   end
-  execute "Enable pilot..." do
-    command "cat /etc/apt/sources.list.d/mariadb-enterprise.list | grep pilot | sed s/'#'//g > /etc/apt/sources.list.d/mariadb-enterprise.list"
-  end
   execute "Updating..." do
     command "apt-get update"
   end
@@ -26,12 +23,6 @@ when "rhel", "fedora"
     source "/tmp/mariadb-enterprise-repository.rpm"
     provider Chef::Provider::Package::Rpm
     action :install
-  end
-  execute "Enable pilot..." do
-    command "cat /etc/yum.repos.d/mariadb-enterprise.repo | sed s/'enabled = 0'/'enabled = 1'/g > /tmp/mariadb-enterprise.tmp"
-  end
-  execute "Enable pilot..." do
-    command "cat /tmp/mariadb-enterprise.tmp > /etc/yum.repos.d/mariadb-enterprise.repo"
   end
 when "suse"
   execute "Downloading package...." do

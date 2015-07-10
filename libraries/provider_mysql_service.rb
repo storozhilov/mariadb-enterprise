@@ -25,22 +25,6 @@ class Chef
       # etc_dir, run_dir, log_dir, etc
 
       action :create do
-        # Yum, Apt, etc. From helpers.rb
-#        configure_package_repositories
-
-        # Software installation
-#        package "#{new_resource.name} :create #{server_package_name}" do
-#          package_name server_package_name
-#          version parsed_version if node['platform'] == 'smartos'
-#          version new_resource.package_version
-#          action new_resource.package_action
-#        end
-
-        #create_stop_system_service
-
-        # Apparmor
-        #configure_apparmor
-
         # System users
         group "#{new_resource.name} :create mysql" do
           group_name 'mysql'
@@ -51,21 +35,6 @@ class Chef
           username 'mysql'
           gid 'mysql'
           action :create
-        end
-
-        # Yak shaving secion. Account for random errata.
-        #
-        # Turns out that mysqld is hard coded to try and read
-        # /etc/mysql/my.cnf, and its presence causes problems when
-        # setting up multiple services.
-        file "#{new_resource.name} :create #{prefix_dir}/etc/mysql/my.cnf" do
-          path "#{prefix_dir}/etc/mysql/my.cnf"
-          action :delete
-        end
-
-        file "#{new_resource.name} :create #{prefix_dir}/etc/my.cnf" do
-          path "#{prefix_dir}/etc/my.cnf"
-          action :delete
         end
 
         # mysql_install_db is broken on 5.6.13
@@ -133,6 +102,7 @@ class Chef
             config: new_resource,
             error_log: error_log,
             include_dir: include_dir,
+            include_original_dir: include_original_dir,
             lc_messages_dir: lc_messages_dir,
             pid_file: pid_file,
             socket_file: socket_file,
@@ -140,6 +110,17 @@ class Chef
             data_dir: parsed_data_dir
             )
           action :create
+        end
+
+        mycnfdir = case node['platform_family']
+        when 'debian'
+          '/etc/mysql/conf.d'
+        else
+          '/etc/my.cnf.d'
+        end
+        execute "Copy original config files from package" do
+          user "root"
+          command "cp -fr '#{mycnfdir}' '#{include_original_dir}'"
         end
 
         # initialize database and create initial records

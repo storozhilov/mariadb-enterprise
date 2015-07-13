@@ -74,8 +74,8 @@ In a vagrant file (For 10.0.17 MDBE version):
       chef.provisioning_path = "/tmp/vagrant-chef/chef-solo"
       chef.json = {
         :maria => {
-          version: 10.0.17,
-          token = 'MY SECRET TOKEN'
+          version: '10.0.17',
+          token: 'MY SECRET TOKEN'
         }
       }
       chef.add_recipe "mariadb-enterprise::install"
@@ -168,8 +168,8 @@ Usage:
 
 Parameters are:
 
-- `mariadb-enterprise::token` - your seckret token
-- `mariadb-enterprise::version` - version of Maria DB
+- `mariadb::token` - your seckret token
+- `mariadb::version` - version of Maria DB
 
 ## uninstall
 
@@ -197,7 +197,7 @@ Creates (doesn't install MariaDB!) and starts MariaDB Enterprise server daemon w
       chef.provisioning_path = "/tmp/vagrant-chef/chef-solo"
       chef.json = {
         :mariadb => {
-          bind_address: 127.0.0.1
+          bind_address: '127.0.0.1'
         }
       }
       chef.add_recipe "mariadb-enterprise::start"
@@ -232,7 +232,7 @@ or
       chef.provisioning_path = "/tmp/vagrant-chef/chef-solo"
       chef.json = {
         :mariadb => {
-          token = 'MY SECRET TOKEN'
+          token: 'MY SECRET TOKEN'
         }
       }
       chef.add_recipe "mariadb-enterprise::install_backuper"

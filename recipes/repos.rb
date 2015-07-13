@@ -1,4 +1,11 @@
 include_recipe "mariadb-enterprise::default"
+
+if (node['mariadb']['token'] == "")
+  msg = "Enterprise token isn't specified!"
+  print msg
+  raise msg
+end
+
 repo = "https://downloads.mariadb.com/enterprise/#{node['mariadb']['token']}/"
 case node[:platform_family]
 when "debian"
